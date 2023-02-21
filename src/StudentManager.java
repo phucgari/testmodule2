@@ -5,11 +5,7 @@ public class StudentManager {
     private List<Student> list = new ArrayList<>();
 
     public StudentManager() {
-        list.add(new Student("01", "phúc", 40, true, "hà nội", 20));
-        list.add(new Student("02", "hương", 20, false, "đà nẵng", 40));
-        list.add(new Student("03", "tuấn", 30, true, "hồ chí minh", 10));
-        list.add(new Student("04", "thảo", 10, false, "điện biên", 55));
-        list.add(new Student("05", "thuận", 50, true, "hải phòng", 66));
+        readCSV();
     }
 
     public List<Student> getList() {
@@ -48,7 +44,7 @@ public class StudentManager {
         try(FileWriter writer=new FileWriter("data/students.csv")){
             for (Student student:
                  list) {
-                writer.write(student.toCSV());
+                writer.write(student.toCSV()+"\n");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -62,12 +58,14 @@ public class StudentManager {
         try(BufferedReader br = new BufferedReader(new FileReader("data/students.csv"))) {
             String line = "";
             while ((line = br.readLine()) != null) {
-                content.add(line.split(","));
+                String[]arr=line.split(",");
+                content.add(new Student(arr[0],arr[1],Integer.parseInt(arr[2]), arr[3].equals("male"),arr[4],Double.parseDouble(arr[5])));
             }
         } catch (FileNotFoundException e) {
             //Some error logging
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        list=content;
     }
 }
